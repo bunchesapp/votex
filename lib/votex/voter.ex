@@ -24,7 +24,6 @@ defmodule Votex.Voter do
     quote do
       defdelegate votes_by(voter), to: Voter
       defdelegate voted_for?(voter, votable), to: Voter
-      defdelegate cleanup_votes(result), to: Voter
     end
   end
 

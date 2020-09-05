@@ -25,7 +25,6 @@ defmodule Votex.Votable do
       defdelegate vote_by(votable, voter), to: Votable
       defdelegate unvote_by(votable, voter), to: Votable
       defdelegate votes_for(votable), to: Votable
-      defdelegate cleanup_votes(result), to: Votable
     end
   end
 
