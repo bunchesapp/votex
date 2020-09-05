@@ -123,7 +123,6 @@ defmodule Votex.Voter do
 
   defp is_child?(module) do
     module.module_info[:attributes]
-    |> Keyword.get(:behaviour, [])
-    |> Enum.member?(__MODULE__)
+    |> Enum.member?({:behaviour, __MODULE__})
   end
 end
