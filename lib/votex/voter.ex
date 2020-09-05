@@ -6,13 +6,13 @@ defmodule Votex.Voter do
   Typically be used by models like User, Team, Organization etc.
 
   ## Example
-      defmodule User do  
-        use Ecto.Schema 
+      defmodule User do
+        use Ecto.Schema
         use Votex.Voter
-        schema "users" do 
-          field :name, :string 
-          field :age, :integer, default:  20 
-        end  
+        schema "users" do
+          field :name, :string
+          field :age, :integer, default:  20
+        end
       end
   """
 
@@ -24,19 +24,32 @@ defmodule Votex.Voter do
     quote do
       @behaviour unquote(__MODULE__)
       @behaviour CleanupBehaviour
-      # defdelegate votes_by(voter), to: Voter
+      defdelegate votes_by(voter), to: Voter
       defdelegate voted_for?(voter, votable), to: Voter
       defdelegate cleanup_votes(result), to: Voter
     end
   end
 
-  # def votes_by(%{} = voter, preload \\ false) do
-  #  { _, voter_type } = extract_fields(nil, voter)
-  #  Vote 
-  #    |> where(voter_type: ^voter_type)
-  #    |> where(voter_id: ^voter.id)
-  #    |> DB.repo().all()
-  # end
+  @doc """
+  Get a list of votes by voter
+
+  ## Example
+
+      votes = user |> User.votes_by
+
+  """
+
+  def votes_by(%{} = voter, preload \\ false) do
+    { _, voter_type } = extract_fields(nil, voter)
+    votes = Vote
+            |> where(voter_type: ^voter_type)
+            |> where(voter_id: ^voter.id)
+            |> DB.repo().all()
+    case preload do
+      true -> votes |> preload_votes
+      false -> votes
+    end
+  end
 
   @doc """
   Check if a votable record has been voted by a voter
@@ -44,7 +57,7 @@ defmodule Votex.Voter do
   ## Example
 
       voted = user |> User.voted_for? post
-    
+
   """
 
   def voted_for?(%{} = voter, %{} = votable) do
