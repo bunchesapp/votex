@@ -6,13 +6,13 @@ defmodule Votex.Votable do
   Typically be used by models like Post, Image, Answer etc.
 
   ## Example
-      defmodule Post do  
-        use Ecto.Schema 
+      defmodule Post do
+        use Ecto.Schema
         use Votex.Votable
-        schema "posts" do 
-          field :title, :string 
-          field :views, :integer, default:  0 
-        end  
+        schema "posts" do
+          field :title, :string
+          field :views, :integer, default:  0
+        end
       end
   """
 
@@ -22,8 +22,12 @@ defmodule Votex.Votable do
 
   defmacro __using__(_opts) do
     quote do
-      @behaviour unquote(__MODULE__)
-      @behaviour CleanupBehaviour
+      __MODULE__.module_info(:attributes)
+      |> Enum.member?({:behaviour, [Votex.CleanupBehaviour]})
+      |> case do
+        true -> nil
+        false -> @behaviour CleanupBehaviour
+      end
       defdelegate vote_by(votable, voter), to: Votable
       defdelegate unvote_by(votable, voter), to: Votable
       defdelegate votes_for(votable), to: Votable
