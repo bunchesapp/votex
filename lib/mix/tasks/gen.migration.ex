@@ -5,6 +5,7 @@ defmodule Mix.Tasks.Votex.Gen.Migration do
   Generate Votex database migration
   """
   use Mix.Task
+  use Ecto.Migration
 
   import Mix.Ecto
   import Mix.Generator
@@ -17,7 +18,7 @@ defmodule Mix.Tasks.Votex.Gen.Migration do
 
     Enum.each(repos, fn repo ->
       ensure_repo(repo, args)
-      path = migrations_path(repo)
+      path = Ecto.Migrator.migrations_path(repo)
 
       source_path =
         :votex

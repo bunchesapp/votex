@@ -6,14 +6,12 @@
 
 # Votex
 
-**Implements :thumbsup: vote / :heart: like / follow functionality for Ecto models in Elixir**
+**Implements vote / like / follow functionality for Ecto models in Elixir**
 
-> Inspired from [Acts as Votable][acts_as_votable] :star: in Ruby on Rails
-
-[acts_as_votable]: https://github.com/ryanto/acts_as_votable
+> Forked from Ramansah's original project.
 
 ## Features
-  
+
 - Any model can be voted
 - Any model can vote
 - Supports self referential voting
@@ -23,7 +21,7 @@
 
 Add Votex to your project dependencies `mix.exs`
 
-``` elixir
+```elixir
 defp deps do
   [{:votex, "~> 0.3.0"}]
 end
@@ -31,14 +29,14 @@ end
 
 Specify your root project's repo in config
 
-``` eixir
+```eixir
 config :votex, Votex.DB,
   repo: MyApp.Repo
 ```
 
 Votex needs a table in DB to store votes information. Install votex and generate votex schema migration
 
-``` shell
+```shell
 mix deps.get
 mix votex.gen.migration
 mix ecto.migrate
@@ -48,7 +46,7 @@ mix ecto.migrate
 
 ### Configure Models
 
-``` elixir
+```elixir
 defmodule User do
   use Ecto.Schema
   use Votex.Voter
@@ -62,7 +60,7 @@ end
 
 ### Vote / Unvote
 
-``` elixir
+```elixir
 post |> Post.vote_by user
 user |> User.voted_for? post
 # true
@@ -89,9 +87,9 @@ post |> Post.unvote_by user
 
 ### Self Referential Vote
 
-``` elixir
+```elixir
 defmodule User do
-  use Ecto.Schema 
+  use Ecto.Schema
   use Votex.Voter
   use Votex.Votable
 end
@@ -104,7 +102,7 @@ user2 |> User.vote_by user1
 
 Since polymorphic associations are not supported in Ecto and callbacks are deprecated, orphan votes need to be cleared when a parent entity is destroyed. Therefore, you need to call cleanup_votes when you delete a Voter or a Votable record.
 
-``` elixir
+```elixir
 # Delete user
 Repo.delete(user) |> User.cleanup_votes
 
@@ -116,7 +114,7 @@ Repo.delete(post) |> Post.cleanup_votes
 
 Some fields like total number of votes on a post can be cached in posts table to avoid extra calls to DB. Votex will update the field if present in schema.
 
-``` elixir
+```elixir
 defmodule Post do
   use Ecto.Schema
   use Votex.Votable
@@ -138,7 +136,7 @@ end
 
 The posts table will track total votes from now on
 
-``` elixir
+```elixir
 post |> Post.vote_by user
 post = Repo.get(Post, 1)
 post.cached_votes_for_total
