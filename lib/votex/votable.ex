@@ -18,11 +18,10 @@ defmodule Votex.Votable do
 
   import Ecto.Query
   import Votex.Core
-  alias Votex.{Vote, Votable, DB, CleanupBehaviour}
+  alias Votex.{Vote, Votable, DB}
 
   defmacro __using__(_opts) do
     quote do
-      @behaviour CleanupBehaviour
       defdelegate vote_by(votable, voter), to: Votable
       defdelegate unvote_by(votable, voter), to: Votable
       defdelegate votes_for(votable), to: Votable
