@@ -22,12 +22,7 @@ defmodule Votex.Votable do
 
   defmacro __using__(_opts) do
     quote do
-      __MODULE__.module_info(:attributes)
-      |> Enum.member?({:behaviour, [Votex.CleanupBehaviour]})
-      |> case do
-        true -> nil
-        false -> @behaviour CleanupBehaviour
-      end
+      @behaviour CleanupBehaviour
       defdelegate vote_by(votable, voter), to: Votable
       defdelegate unvote_by(votable, voter), to: Votable
       defdelegate votes_for(votable), to: Votable
