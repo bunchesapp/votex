@@ -22,8 +22,10 @@ defmodule Votex.Voter do
 
   defmacro __using__(_opts) do
     quote do
+      @behaviour unquote(__MODULE__)
       defdelegate votes_by(voter), to: Voter
       defdelegate voted_for?(voter, votable), to: Voter
+      defdelegate cleanup_votes(result), to: Voter
     end
   end
 
