@@ -169,10 +169,8 @@ defmodule Votex.Votable do
   end
 
   defp create_vote(%{} = vote) do
-    IO.inspect vote
     %Vote{}
     |> Vote.changeset(vote)
-    |> IO.inspect
     |> DB.repo().insert
   end
 end

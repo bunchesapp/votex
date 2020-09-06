@@ -14,7 +14,6 @@ defmodule Votex.Vote do
   @fields ~w(votable_type votable_id voter_type voter_id)a
 
   def changeset(vote, attrs) do
-    IO.inspect attrs
     vote
     |> cast(attrs, @fields)
     |> validate_required(@fields)
