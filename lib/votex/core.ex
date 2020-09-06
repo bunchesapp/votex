@@ -50,7 +50,8 @@ defmodule Votex.Core do
     modules
     |> Enum.map(fn child ->
       {
-        [child.__struct__.__meta__.source]
+        child.__struct__.__meta__.source
+        |> Tuple.to_list
       }
     end)
     |> Enum.into(%{})
