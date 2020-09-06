@@ -77,9 +77,9 @@ defmodule Votex.Core do
   end
 
   def get_id_for(type, model) do
-    case model.id do
-      nil -> model["#{type}_id"]
-      _ -> model.id
+    case Map.has_key?(model, :id) do
+      false -> model["#{type}_id"]
+      true -> model.id
     end
   end
 
