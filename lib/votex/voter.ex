@@ -25,9 +25,11 @@ defmodule Votex.Voter do
       @behaviour unquote(__MODULE__)
       defdelegate votes_by(voter), to: Voter
       defdelegate voted_for?(voter, votable), to: Voter
-      defdelegate cleanup_votes(result), to: Voter
+      defdelegate cleanup_voter(result), to: Voter, as: cleanup_votes
     end
   end
+
+  @callback cleanup_voter(tuple()) :: tuple()
 
   @doc """
   Get a list of votes by voter

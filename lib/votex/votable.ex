@@ -26,8 +26,11 @@ defmodule Votex.Votable do
       defdelegate vote_by(votable, voter), to: Votable
       defdelegate unvote_by(votable, voter), to: Votable
       defdelegate votes_for(votable), to: Votable
+      defdelegate cleanup_votable(result), to: Votable, as: cleanup_votes
     end
   end
+
+  @callback cleanup_votable(tuple()) :: tuple()
 
   @doc """
   Primary method to cast a vote
