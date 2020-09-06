@@ -18,7 +18,7 @@ defmodule Votex.Votable do
 
   import Ecto.Query
   import Votex.Core
-  alias Votex.{Vote, Votable, DB}
+  alias Votex.{DB, Votable, Vote}
 
   defmacro __using__(_opts) do
     quote do
@@ -26,7 +26,7 @@ defmodule Votex.Votable do
       defdelegate vote_by(votable, voter), to: Votable
       defdelegate unvote_by(votable, voter), to: Votable
       defdelegate votes_for(votable), to: Votable
-      defdelegate cleanup_votable(result), to: Votable, as: cleanup_votes
+      defdelegate cleanup_votable(result), to: Votable
     end
   end
 
@@ -125,11 +125,11 @@ defmodule Votex.Votable do
 
   ## Example
 
-      Repo.delete(user) |> User.cleanup_votes
+      Repo.delete(user) |> User.cleanup_votable
 
   """
 
-  def cleanup_votes({status, %{} = payload}) do
+  def cleanup_votable({status, %{} = payload}) do
     case status do
       :ok ->
         {votable_type, _} = extract_fields(payload, nil)
