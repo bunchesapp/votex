@@ -2,12 +2,12 @@ defmodule <%= module_prefix %>.Repo.Migrations.Votex do
   use Ecto.Migration
 
   def change do
-    
+
     create table("votex_votes") do
       add :voter_type, :string, size: 40
-      add :voter_id, :integer, default: 0
+      add :voter_id, :binary_id
       add :votable_type, :string, size: 40
-      add :votable_id, :integer, default: 0
+      add :votable_id, :binary_id
       timestamps()
     end
 
@@ -16,8 +16,8 @@ defmodule <%= module_prefix %>.Repo.Migrations.Votex do
     create index("votex_votes", [:votable_type])
     create index("votex_votes", [:votable_id])
 
-    create unique_index(:votex_votes, 
-      [:voter_type, :voter_id, :votable_type, :votable_id], 
+    create unique_index(:votex_votes,
+      [:voter_type, :voter_id, :votable_type, :votable_id],
       name: :unique_vote)
 
   end

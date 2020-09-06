@@ -40,9 +40,10 @@ defmodule Votex.Voter do
 
   def votes_by(%{} = voter, preload \\ false) do
     { _, voter_type } = extract_fields(nil, voter)
+    voter_id = get_id_for(voter_type, voter)
     votes = Vote
             |> where(voter_type: ^voter_type)
-            |> where(voter_id: ^voter.id)
+            |> where(voter_id: ^voter_id)
             |> DB.repo().all()
     case preload do
       true -> votes |> preload_votes
@@ -61,12 +62,14 @@ defmodule Votex.Voter do
 
   def voted_for?(%{} = voter, %{} = votable) do
     {votable_type, voter_type} = extract_fields(votable, voter)
+    votable_id = get_id_for(votable_type, votable)
+    voter_id = get_id_for(voter_type, voter)
 
     case Vote
          |> where(voter_type: ^voter_type)
-         |> where(voter_id: ^voter.id)
+         |> where(voter_id: ^voter_id)
          |> where(votable_type: ^votable_type)
-         |> where(votable_id: ^votable.id)
+         |> where(votable_id: ^votable_id)
          |> DB.repo().one() do
       %{} -> true
       nil -> false
@@ -87,10 +90,12 @@ defmodule Votex.Voter do
       :ok ->
         {_, voter_type} = extract_fields(nil, payload)
 
+        payload_id = get_id_for(voter_type, payload)
+
         votes =
           Vote
           |> where(voter_type: ^voter_type)
-          |> where(voter_id: ^payload.id)
+          |> where(voter_id: ^payload_id)
           |> DB.repo().all()
 
         modules =
@@ -102,7 +107,7 @@ defmodule Votex.Voter do
 
         Vote
         |> where(voter_type: ^voter_type)
-        |> where(voter_id: ^payload.id)
+        |> where(voter_id: ^payload_id)
         |> DB.repo().delete_all
 
       _ ->
@@ -123,6 +128,6 @@ defmodule Votex.Voter do
 
   defp is_child?(module) do
     module.module_info[:attributes]
-    |> Enum.member?({:behaviour, __MODULE__})
+    |> Enum.member?({:behaviour, [__MODULE__]})
   end
 end

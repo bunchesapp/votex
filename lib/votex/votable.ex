@@ -42,12 +42,13 @@ defmodule Votex.Votable do
     {votable_type, voter_type} = extract_fields(votable, voter)
 
     votable_id = get_id_for(votable_type, votable)
+    voter_id = get_id_for(voter_type, voter)
 
     result =
       %{
         votable_id: votable_id,
         votable_type: votable_type,
-        voter_id: voter,
+        voter_id: voter_id,
         voter_type: voter_type
       }
       |> create_vote
@@ -68,12 +69,15 @@ defmodule Votex.Votable do
   def unvote_by(votable, voter) do
     {votable_type, voter_type} = extract_fields(votable, voter)
 
+    votable_id = get_id_for(votable_type, votable)
+    voter_id = get_id_for(voter_type, voter)
+
     vote =
       Vote
       |> where(votable_type: ^votable_type)
-      |> where(votable_id: ^votable.id)
+      |> where(votable_id: ^votable_id)
       |> where(voter_type: ^voter_type)
-      |> where(voter_id: ^voter.id)
+      |> where(voter_id: ^voter_id)
       |> DB.repo().one
 
     case vote do
@@ -81,7 +85,7 @@ defmodule Votex.Votable do
         calculate_cached_fields_for_votable(
           get_module(votable_type),
           votable_type,
-          votable.id,
+          votable_id,
           false
         )
 
@@ -104,9 +108,11 @@ defmodule Votex.Votable do
   def votes_for(votable) do
     {votable_type, _} = extract_fields(votable, nil)
 
+    votable_id = get_id_for(votable_type, votable)
+
     Vote
     |> where(votable_type: ^votable_type)
-    |> where(votable_id: ^votable.id)
+    |> where(votable_id: ^votable_id)
     |> DB.repo().all
     |> preload_votes
   end
@@ -125,9 +131,11 @@ defmodule Votex.Votable do
       :ok ->
         {votable_type, _} = extract_fields(payload, nil)
 
+        payload_id = get_id_for(votable_type, payload)
+
         Vote
         |> where(votable_type: ^votable_type)
-        |> where(votable_id: ^payload.id)
+        |> where(votable_id: ^payload_id)
         |> DB.repo().delete_all
 
       _ ->
@@ -158,8 +166,10 @@ defmodule Votex.Votable do
   end
 
   defp create_vote(%{} = vote) do
+    IO.inspect vote
     %Vote{}
     |> Vote.changeset(vote)
+    |> IO.inspect
     |> DB.repo().insert
   end
 end

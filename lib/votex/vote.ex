@@ -5,8 +5,8 @@ defmodule Votex.Vote do
   schema "votex_votes" do
     field(:voter_type, :string)
     field(:votable_type, :string)
-    field(:voter_id, :integer)
-    field(:votable_id, :integer)
+    field(:voter_id, :binary_id)
+    field(:votable_id, :binary_id)
 
     timestamps()
   end
@@ -14,6 +14,7 @@ defmodule Votex.Vote do
   @fields ~w(votable_type votable_id voter_type voter_id)a
 
   def changeset(vote, attrs) do
+    IO.inspect attrs
     vote
     |> cast(attrs, @fields)
     |> validate_required(@fields)
