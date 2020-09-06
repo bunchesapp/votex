@@ -6,6 +6,8 @@
 
 # Votex
 
+## UNSTABLE
+
 **Implements vote / like / follow functionality for Ecto models in Elixir**
 
 > Forked from Ramansah's original project.
