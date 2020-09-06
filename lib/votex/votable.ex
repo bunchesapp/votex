@@ -42,13 +42,12 @@ defmodule Votex.Votable do
     {votable_type, voter_type} = extract_fields(votable, voter)
 
     votable_id = get_id_for(votable_type, votable)
-    voter_id = get_id_for(voter_type, voter)
 
     result =
       %{
         votable_id: votable_id,
         votable_type: votable_type,
-        voter_id: voter_id,
+        voter_id: voter,
         voter_type: voter_type
       }
       |> create_vote
