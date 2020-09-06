@@ -49,7 +49,10 @@ defmodule Votex.Core do
   def convert_modules_list_to_map(modules) do
     modules
     |> Enum.map(fn child ->
-        child.__struct__.__meta__.source
+      {
+        child.__struct__.__meta__.source,
+        child
+      }
     end)
     |> Enum.into(%{})
   end
