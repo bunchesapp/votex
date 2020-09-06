@@ -41,16 +41,19 @@ defmodule Votex.Votable do
   def vote_by(votable, voter) do
     {votable_type, voter_type} = extract_fields(votable, voter)
 
+    votable_id = Core.get_id_for(votable_type, votable)
+    voter_id = Core.get_id_for(voter_type, voter)
+
     result =
       %{
-        votable_id: votable.id,
+        votable_id: votable_id,
         votable_type: votable_type,
-        voter_id: voter.id,
+        voter_id: voter_id,
         voter_type: voter_type
       }
       |> create_vote
 
-    calculate_cached_fields_for_votable(get_module(votable_type), votable_type, votable.id, true)
+    calculate_cached_fields_for_votable(get_module(votable_type), votable_type, votable_id, true)
     result
   end
 

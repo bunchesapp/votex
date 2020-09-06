@@ -76,6 +76,13 @@ defmodule Votex.Core do
     end
   end
 
+  def get_id_for(type, model) do
+    case model.id do
+      nil -> model["#{type}_id"]
+      _ -> model.id
+    end
+  end
+
   # Private
 
   defp calculate_votes_for_votable(type, id) do
