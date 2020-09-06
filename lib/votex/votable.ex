@@ -41,8 +41,8 @@ defmodule Votex.Votable do
   def vote_by(votable, voter) do
     {votable_type, voter_type} = extract_fields(votable, voter)
 
-    votable_id = Core.get_id_for(votable_type, votable)
-    voter_id = Core.get_id_for(voter_type, voter)
+    votable_id = get_id_for(votable_type, votable)
+    voter_id = get_id_for(voter_type, voter)
 
     result =
       %{
