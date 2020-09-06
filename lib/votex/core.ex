@@ -7,7 +7,7 @@ defmodule Votex.Core do
   alias Votex.{DB, Voter, Votable, Vote}
 
   def extract_fields(votable, voter) do
-    {_, votable_type} =
+    votable_type =
       case votable do
         %{} = votable ->
           if not (Votable.children()
@@ -17,10 +17,10 @@ defmodule Votex.Core do
           votable.__meta__.source
 
         _ ->
-          {nil, nil}
+          nil
       end
 
-    {_, voter_type} =
+    voter_type =
       case voter do
         %{} = voter ->
           if not (Voter.children()
@@ -30,7 +30,7 @@ defmodule Votex.Core do
           voter.__meta__.source
 
         _ ->
-          {nil, nil}
+          nil
       end
 
     {votable_type, voter_type}
