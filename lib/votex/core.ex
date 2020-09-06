@@ -51,9 +51,6 @@ defmodule Votex.Core do
     |> Enum.map(fn child ->
       {
         child.__struct__.__meta__.source
-        |> Tuple.to_list()
-        |> Enum.at(1),
-        child
       }
     end)
     |> Enum.into(%{})
